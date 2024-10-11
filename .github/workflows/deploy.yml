@@ -2,10 +2,17 @@ name: Deployment
 on:
   push:
     branches:
-      - main
+      - master
       - dev
+env:
+  MONGODB_DB_NAME: gh-demo
 jobs:
   test:
+    env:
+      MONGODB_CLUSTER_ADDRESS: node-express-cluster.txuox.mongodb.net
+      MONGODB_USERNAME: huzaifajamal92
+      MONGODB_PASSWORD: rcJhCGZ9pZBBPDFh
+      PORT: 8080
     environment: testing
     runs-on: ubuntu-latest
     steps:
@@ -19,15 +26,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run server
-        run: npm start & npx wait-on http://127.0.0.1:XYZ
+        run: npm start & npx wait-on http://127.0.0.1:$PORT
       - name: Run tests
         run: npm test
       - name: Output information
-        run: echo "..."
+        run: |
+          echo "MONGODB USERNAME: ${{env.MONGODB_USERNAME}}"
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Output information
         run: |        
-          echo "..."
+          echo "MONGODB USERNAME: ${{env.MONGODB_USERNAME}}"
